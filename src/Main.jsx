@@ -8,7 +8,15 @@ const Main = () => {
   const [error, setError] = useState('');
 
   const handleDownload = async () => {
-    const shortcode = link.split('/').filter(Boolean).pop(); // Extract shortcode from the link
+    const regex = /\/reel\/([^/?#&]+)|\/reels\/([^/?#&]+)/;
+    const match = link.match(regex);
+    const shortcode = match ? match[1] || match[2] : null;
+
+    if (!shortcode) {
+      setError('Invalid Instagram link. Please provide a valid link.');
+      setVideoData(null);
+      return;
+    }
 
     const options = {
       method: 'GET',
